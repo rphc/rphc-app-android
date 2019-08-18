@@ -33,10 +33,10 @@ public class LauncherActivity extends AppCompatActivity {
         JsonWebToken accessToken = preferenceWrapper.getCurrentAccessToken();
         JsonWebToken refreshToken = preferenceWrapper.getCurrentRefreshToken();
 
-        if (accessToken != null && refreshToken != null) {
-            return refreshToken.isExpired();
+        if (accessToken == null || refreshToken == null) {
+            return true;
         }
 
-        return false;
+        return refreshToken.isExpired();
     }
 }

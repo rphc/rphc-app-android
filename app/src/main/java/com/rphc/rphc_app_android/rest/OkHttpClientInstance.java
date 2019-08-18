@@ -2,7 +2,6 @@ package com.rphc.rphc_app_android.rest;
 
 
 import android.content.Context;
-import android.util.Log;
 
 import com.rphc.rphc_app_android.auxiliary.JsonWebToken;
 import com.rphc.rphc_app_android.auxiliary.PreferenceWrapper;
@@ -62,10 +61,6 @@ public class OkHttpClientInstance {
 //                                            }
 
                                             JsonWebToken accessToken = preferenceWrapper.getCurrentAccessToken();
-                                            Log.d("TAG", "AccessToken expired: " + accessToken.isExpired());
-
-                                            JsonWebToken refreshToken = preferenceWrapper.getCurrentRefreshToken();
-                                            Log.d("TAG", "RefreshToken expired: " + refreshToken.isExpired());
 
                                             if (accessToken != null) {
                                                 requestBuilder.addHeader("Authorization", "Bearer " + accessToken.base64());

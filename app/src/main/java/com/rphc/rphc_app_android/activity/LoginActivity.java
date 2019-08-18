@@ -25,7 +25,6 @@ import retrofit2.Response;
 public class LoginActivity extends AppCompatActivity {
 
     private PreferenceWrapper preferenceWrapper;
-    private RphcService rphcService;
 
     private TextInputLayout baseUrlInputLayout, emailInputLayout, passwordInputLayout;
 
@@ -46,6 +45,12 @@ public class LoginActivity extends AppCompatActivity {
 
         Button loginButton = findViewById(R.id.login_button);
         loginButton.setOnClickListener(onLoginClicked());
+
+        // if this is not a first time login, at least the URL can be shown
+        String baseUrl = preferenceWrapper.getCurrentBaseUrl();
+        if (baseUrl != null) {
+            baseUrlInputLayout.getEditText().setText(baseUrl);
+        }
     }
 
     private View.OnClickListener  onLoginClicked() {
@@ -62,9 +67,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void getTokens(String baseUrl, String email, String password) {
+        preferenceWrapper.setCurrentBaseUrl(baseUrlInputLayout.getEditText().getText().toString());
 
-        rphcService = RphcRestClient.getInstance(LoginActivity.this, baseUrl).getService();
-
+        RphcService rphcService = RphcRestClient.getInstance(LoginActivity.this, baseUrl).getService();
         Call<TokenResponse> tokenCall = rphcService.obtainTokens(email, password);
 
         tokenCall.enqueue(new Callback<TokenResponse>() {

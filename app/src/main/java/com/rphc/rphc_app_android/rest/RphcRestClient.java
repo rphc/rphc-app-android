@@ -3,6 +3,7 @@ package com.rphc.rphc_app_android.rest;
 
 import android.content.Context;
 
+import com.rphc.rphc_app_android.auxiliary.JsonWebToken;
 import com.rphc.rphc_app_android.auxiliary.PreferenceWrapper;
 
 import okhttp3.OkHttpClient;
@@ -21,8 +22,14 @@ public class RphcRestClient {
 
         serviceHolder = new RphcServiceHolder();
 
+        String accessTokenBase64 = null;
+        JsonWebToken accessToken = preferenceWrapper.getCurrentAccessToken();
+        if (accessToken != null) {
+            accessTokenBase64 = accessToken.base64();
+        }
+
         OkHttpClient okHttpClient = new OkHttpClientInstance.Builder(context, serviceHolder)
-                .addHeader("Authorization", preferenceWrapper.getCurrentAccessToken().base64())
+                .addHeader("Authorization", accessTokenBase64)
                 .build();
 
         RphcService service = new Retrofit.Builder()

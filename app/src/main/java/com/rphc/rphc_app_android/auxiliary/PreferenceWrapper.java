@@ -10,17 +10,39 @@ import com.rphc.rphc_app_android.R;
 
 public class PreferenceWrapper {
 
+    private static final String BASE_URL = "BASE_URL";
     private static final String ACCESS_TOKEN = "ACCESS_TOKEN";
     private static final String REFRESH_TOKEN = "REFRESH_TOKEN";
 
     private static PreferenceWrapper instance;
+
     private SharedPreferences preferences;
 
+    // cache
+    private String cachedBaseUrl;
     private JsonWebToken cachedAccessToken, cachedRefreshToken;
 
 
     private PreferenceWrapper(Context context) {
         preferences = context.getSharedPreferences(context.getString(R.string.user_credentials_file_key), Context.MODE_PRIVATE);
+    }
+
+
+    public String getCurrentBaseUrl() {
+        if (cachedBaseUrl == null) {
+            String baseUrlString = preferences.getString(BASE_URL, null);
+            cachedBaseUrl = baseUrlString;
+        }
+
+        return cachedBaseUrl;
+    }
+
+    public void setCurrentBaseUrl(String baseUrl) {
+        cachedBaseUrl = baseUrl;
+
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(BASE_URL, baseUrl);
+        editor.apply();
     }
 
 
