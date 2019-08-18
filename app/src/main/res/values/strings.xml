@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">rphc-app-android</string>
+    <string name="user_credentials_file_key">user_credentials_file</string>
+</resources>
