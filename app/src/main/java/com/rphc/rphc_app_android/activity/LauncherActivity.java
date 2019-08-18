@@ -1,11 +1,12 @@
 package com.rphc.rphc_app_android.activity;
 
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.rphc.rphc_app_android.auxiliary.JsonWebToken;
 import com.rphc.rphc_app_android.auxiliary.PreferenceWrapper;
 
 
@@ -19,16 +20,23 @@ public class LauncherActivity extends AppCompatActivity {
 
         preferenceWrapper = PreferenceWrapper.getInstance(LauncherActivity.this);
 
-        if (isUserAuthenticated()) {
+        if (needsAuthentication()) {
             startActivity(new Intent(LauncherActivity.this, LoginActivity.class));
         } else {
-            startActivity(new Intent(LauncherActivity.this, LoginActivity.class));
+            startActivity(new Intent(LauncherActivity.this, MainActivity.class));
         }
 
         finish();
     }
 
-    private boolean isUserAuthenticated() {
-        return preferenceWrapper.getCurrentAccessToken() != null;
+    private boolean needsAuthentication() {
+        JsonWebToken accessToken = preferenceWrapper.getCurrentAccessToken();
+        JsonWebToken refreshToken = preferenceWrapper.getCurrentRefreshToken();
+
+        if (accessToken != null && refreshToken != null) {
+            return refreshToken.isExpired();
+        }
+
+        return false;
     }
 }

@@ -2,7 +2,6 @@ package com.rphc.rphc_app_android.rest;
 
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -38,8 +37,7 @@ public class TokenAuthenticator implements Authenticator {
         JsonWebToken refreshToken = preferenceWrapper.getCurrentRefreshToken();
 
         if (refreshToken.isExpired()) {
-            // TODO need to login again
-            Log.d("TAG", "Refresh Token is expired!!");
+            return null;
         }
 
         retrofit2.Response<AccessTokenResponse> refreshTokenResponse = serviceHolder.get().refreshAccessToken(refreshToken.base64()).execute();

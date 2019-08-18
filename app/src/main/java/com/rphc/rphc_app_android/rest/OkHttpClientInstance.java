@@ -9,8 +9,6 @@ import com.rphc.rphc_app_android.auxiliary.PreferenceWrapper;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
@@ -51,7 +49,7 @@ public class OkHttpClientInstance {
 
                                             // default headers
                                             Request.Builder requestBuilder = chain.request().newBuilder()
-                                                    .addHeader("accept", "application/json")
+                                                    .addHeader("Accept", "application/json")
                                                     .addHeader("Content-Type", "application/json");
 
                                             // additional headers
