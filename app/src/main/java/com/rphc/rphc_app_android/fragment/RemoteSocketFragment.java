@@ -6,15 +6,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.rphc.rphc_app_android.R;
+import com.rphc.rphc_app_android.adapter.RemoteSocketAdapter;
 import com.rphc.rphc_app_android.auxiliary.PreferenceWrapper;
 import com.rphc.rphc_app_android.rest.RphcRestClient;
 import com.rphc.rphc_app_android.rest.RphcService;
+import com.rphc.rphc_app_android.rest.model.Message;
 import com.rphc.rphc_app_android.rest.model.RemoteSocket;
 
 import java.util.List;
@@ -29,7 +32,7 @@ public class RemoteSocketFragment extends Fragment {
     private PreferenceWrapper preferenceWrapper;
     private RphcService rphcService;
 
-    private TextView resultView;
+    private RecyclerView recyclerView;
 
     public RemoteSocketFragment() { }
 
@@ -38,7 +41,7 @@ public class RemoteSocketFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_remote_socket, container, false);
 
-        resultView = v.findViewById(R.id.resultText);
+        recyclerView = v.findViewById(R.id.recyclerView);
 
         return v;
     }
@@ -50,8 +53,11 @@ public class RemoteSocketFragment extends Fragment {
         preferenceWrapper = PreferenceWrapper.getInstance(getContext());
         rphcService = RphcRestClient.getInstance(getContext(), preferenceWrapper.getCurrentBaseUrl()).getService();
 
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
         listRemoteSockets();
     }
+
     private void listRemoteSockets() {
         Call<List<RemoteSocket>> allSocketsCall = rphcService.getAllRemoteSockets();
 
@@ -60,12 +66,40 @@ public class RemoteSocketFragment extends Fragment {
             public void onResponse(Call<List<RemoteSocket>> call, Response<List<RemoteSocket>> response) {
                 List<RemoteSocket> remoteSockets = response.body();
 
-                assert remoteSockets != null;
+                RemoteSocketAdapter socketAdapter = new RemoteSocketAdapter(remoteSockets);
 
-                resultView.setText("");
-                for (RemoteSocket s : remoteSockets) {
-                    resultView.append(s.getName());
-                }
+                socketAdapter.addOnRemoteSocketClickListener(new RemoteSocketAdapter.OnRemoteSocketClickListener() {
+                    @Override
+                    public void onClick(int socketId, boolean enable) {
+                        if (enable) {
+                            Call<Message> enableSocketCall = rphcService.enableRemoteSocket(socketId);
+                            enableSocketCall.enqueue(new Callback<Message>() {
+                                @Override
+                                public void onResponse(Call<Message> call, Response<Message> response) {
+
+                                }
+                                @Override
+                                public void onFailure(Call<Message> call, Throwable t) {
+
+                                }
+                            });
+                        } else {
+                            Call<Message> disableSocketCall = rphcService.disableRemoteSocket(socketId);
+                            disableSocketCall.enqueue(new Callback<Message>() {
+                                @Override
+                                public void onResponse(Call<Message> call, Response<Message> response) {
+
+                                }
+                                @Override
+                                public void onFailure(Call<Message> call, Throwable t) {
+
+                                }
+                            });
+                        }
+                    }
+                });
+
+                recyclerView.setAdapter(socketAdapter);
             }
 
             @Override

@@ -32,4 +32,5 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
 
     implementation 'com.google.android.material:material:1.1.0-alpha09'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
 }

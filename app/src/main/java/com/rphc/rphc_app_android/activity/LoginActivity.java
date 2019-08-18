@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -86,9 +87,11 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 finish();
             }
+
             @Override
             public void onFailure(Call<TokenResponse> call, Throwable t) {
                 Log.e("TAG", t.toString());
+                Toast.makeText(LoginActivity.this, t.toString(), Toast.LENGTH_LONG).show();
             }
         });
     }
