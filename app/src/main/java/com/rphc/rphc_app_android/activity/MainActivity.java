@@ -21,6 +21,8 @@ import com.rphc.rphc_app_android.R;
 import com.rphc.rphc_app_android.auxiliary.PreferenceWrapper;
 import com.rphc.rphc_app_android.fragment.LedStripFragment;
 import com.rphc.rphc_app_android.fragment.RemoteSocketFragment;
+import com.rphc.rphc_app_android.rest.RphcRestClient;
+import com.rphc.rphc_app_android.rest.RphcService;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -36,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
         preferenceWrapper = PreferenceWrapper.getInstance(MainActivity.this);
 
+        refreshAccessToken();
         initToolbar();
         initViewPager();
     }
@@ -68,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(actionbar);
 
         ActionBar ab = getSupportActionBar();
+        assert ab != null;
         ab.setDisplayShowTitleEnabled(true);
     }
 
@@ -79,6 +83,13 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
     }
 
+
+    private void refreshAccessToken() {
+        if (preferenceWrapper.getCurrentAccessToken().isExpired()) {
+            RphcService service = RphcRestClient.getInstance(MainActivity.this, preferenceWrapper.getCurrentBaseUrl()).getService();
+            service.refreshAccessToken(preferenceWrapper.getCurrentRefreshToken().base64());
+        }
+    }
 
     private void logoutUser() {
         preferenceWrapper.setCurrentRefreshToken(null);

@@ -66,8 +66,6 @@ public class RemoteSocketFragment extends Fragment {
             public void onResponse(Call<List<RemoteSocket>> call, Response<List<RemoteSocket>> response) {
                 List<RemoteSocket> remoteSockets = response.body();
 
-                Log.d("TAG", "Socket count: " + remoteSockets.size());
-
                 RemoteSocketAdapter socketAdapter = new RemoteSocketAdapter(remoteSockets);
 
                 socketAdapter.addOnRemoteSocketClickListener(new RemoteSocketAdapter.OnRemoteSocketClickListener() {
