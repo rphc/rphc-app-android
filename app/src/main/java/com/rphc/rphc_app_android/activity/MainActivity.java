@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.rphc.rphc_app_android.R;
+import com.rphc.rphc_app_android.fragment.LedStripFragment;
 import com.rphc.rphc_app_android.fragment.RemoteSocketFragment;
 
 
@@ -25,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
 
-        transaction.add(R.id.fragmentContainer, new RemoteSocketFragment(), RemoteSocketFragment.class.getSimpleName());
+        transaction.add(R.id.fragmentContainer, new LedStripFragment(), RemoteSocketFragment.class.getSimpleName());
         transaction.commit();
     }
 }

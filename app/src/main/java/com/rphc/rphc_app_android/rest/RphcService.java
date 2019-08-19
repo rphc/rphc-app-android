@@ -2,6 +2,7 @@ package com.rphc.rphc_app_android.rest;
 
 
 import com.rphc.rphc_app_android.rest.model.AccessTokenResponse;
+import com.rphc.rphc_app_android.rest.model.AddressableLedStrip;
 import com.rphc.rphc_app_android.rest.model.Message;
 import com.rphc.rphc_app_android.rest.model.RemoteSocket;
 import com.rphc.rphc_app_android.rest.model.TokenResponse;
@@ -41,4 +42,15 @@ public interface RphcService {
 
     @POST("api/devices/remote-socket/{id}/disable/")
     Call<Message> disableRemoteSocket(@Path("id") int socketId);
+
+
+    // ADDRESSABLE LED STRIPS
+
+    @GET("api/devices/addressable-led-strip/")
+    Call<List<AddressableLedStrip>> getAllAddressableLedStrips();
+
+    @POST("api/devices/addressable-led-strip/{id}/set-color/")
+    @FormUrlEncoded
+    Call<Message> setAddressableLedColor(@Path("id") int addressableLedId, @Field("r") int r, @Field("g") int g, @Field("b") int b);
+
 }
