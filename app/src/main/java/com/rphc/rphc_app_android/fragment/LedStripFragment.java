@@ -2,7 +2,6 @@ package com.rphc.rphc_app_android.fragment;
 
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,14 +30,13 @@ public class LedStripFragment extends Fragment {
     private PreferenceWrapper preferenceWrapper;
     private RphcService rphcService;
 
-    private HSLColorPicker colorPicker;
     private int ledAddress = 0;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_addressable_led_strip, container, false);
 
-        colorPicker = v.findViewById(R.id.hlsColorPicker);
+        HSLColorPicker colorPicker = v.findViewById(R.id.hlsColorPicker);
 
         colorPicker.setColorSelectionListener(new SimpleColorSelectionListener() {
             @Override
@@ -49,7 +47,7 @@ public class LedStripFragment extends Fragment {
                 int g = (color >> 8) & (0xFF);
                 int b = color & (0xFF);
 
-                Log.d("TAG", "Color: " + r + ", " + g + ", " + b + ", " + alpha);
+//                Log.d("TAG", "Color: " + r + ", " + g + ", " + b + ", " + alpha);
 
                 Call<Message> setColorCall = rphcService.setAddressableLedColor(ledAddress, r, g, b);
 
@@ -85,7 +83,10 @@ public class LedStripFragment extends Fragment {
             @Override
             public void onResponse(Call<List<AddressableLedStrip>> call, Response<List<AddressableLedStrip>> response) {
                 List<AddressableLedStrip> ledStrips = response.body();
-                ledAddress = ledStrips.get(0).getId();
+
+                if (ledStrips.size() > 0) {
+                    ledAddress = ledStrips.get(0).getId();
+                }
             }
 
             @Override
